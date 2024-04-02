@@ -48,6 +48,6 @@ A default admin user is created with the following credentials:
 
 ## Contributors
 
-- [@YourName](https://github.com/YourName) - Project Lead
+- [@MD Talib Ansari](https://www.linkedin.com/in/mdtalibansari9899) - Project Lead
 
 Feel free to contribute and improve this project!
