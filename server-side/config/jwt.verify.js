@@ -16,7 +16,6 @@ export const verifyToken = (req, res, next) => {
         success: false, message: 'Unauthorized access.'
       });
     } else {
-      console.log('-----====', decoded)
       req.userInfo = decoded;
       next()
     }
