@@ -19,8 +19,8 @@ const initializeChannel = async () => {
 // Start consuming messages from the queue
 const startConsuming = () => {
     try {
-        channel.consume(QUEUENAME, (msg) => {
-            const dataGetFromQueue = JSON.parse(Buffer.from(msg.content).toString())
+        channel.consume(QUEUENAME, async (msg) => {
+            const dataGetFromQueue = JSON.parse(Buffer.from(msg.content).toString());
             if (dataGetFromQueue?.monthlyRevenue) {
                 dataGetFromQueue?.monthlyRevenue.forEach(data => {
                     sendRevenueEmail({
@@ -32,13 +32,22 @@ const startConsuming = () => {
                             total: data.totalAmount,
                         }
                     });
-
-                })
+                });
+            } else if (dataGetFromQueue?.retailUser) {
+                const batchSize = 1;
+                for (let i = 0; i < dataGetFromQueue.retailUser.length; i += batchSize) {
+                    const batch = dataGetFromQueue.retailUser.slice(i, i + batchSize);
+                    const dataSent = { bookRelease: batch };
+                    sendMessageToQueue(JSON.stringify(dataSent));
+                    await new Promise(resolve => setTimeout(resolve, 6000));
+                }
+            } else if (dataGetFromQueue?.bookRelease) {
+                dataGetFromQueue?.bookRelease.forEach(data => {
+                    sendRevenueEmail(data);
+                });
             } else {
                 sendRevenueEmail(dataGetFromQueue);
             }
-
-            console.log("Received message from queue");
         }, { noAck: true });
     } catch (error) {
         console.error('Error occurred while consuming message:', error);

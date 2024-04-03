@@ -1,7 +1,7 @@
 import { validationResult } from 'express-validator';
 import { createBook, updateBook, fetchBooks, deleteBookByTitle, isBookPublish, publishBookToggle } from '../../service/book.service.js';
 import { fetchAllRetailerUsers } from "../../service/user.service.js";
-import { sendRevenueEmail } from '../../../../config/mailer.js';
+import { sendMessageToQueue } from '../../../../config/message.queue.js';
 
 // Creation of Book.
 const create = async (req, res) => {
@@ -231,19 +231,23 @@ const bookPublish = async (req, res) => {
                     error: null
                 });
             } else {
+                const retailUserMailInfo = [];
                 const [bookStatusUpdate, fetchRetailer] = await Promise.all([publishBookToggle(matchQuery, updateQuery), fetchAllRetailerUsers()]);
-                fetchRetailer?.forEach(data => {
-                    sendRevenueEmail({
-                        email: data.email,
-                        subject: 'Release New Books',
-                        bookName: bookStatusUpdate.title,
-                        price: bookStatusUpdate.price
+                if (fetchRetailer.length > 0) {
+                    fetchRetailer?.forEach(data => {
+                        retailUserMailInfo.push({
+                            email: data.email,
+                            subject: 'Release New Books',
+                            bookName: bookStatusUpdate.title,
+                            price: bookStatusUpdate.price
+                        });
                     });
-                });
+                    sendMessageToQueue(JSON.stringify({ retailUser: retailUserMailInfo }));
+                }
                 if (bookStatusUpdate) {
                     return res.status(200).json({
                         success: true,
-                        message: 'Book Already Publish.',
+                        message: 'Book Publish successfully.',
                         error: null
                     });
                 } else {
