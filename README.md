@@ -1,6 +1,6 @@
 # Book Store Application Backend
 
-This project is the backend implementation of a book store application, providing features for user management, book management, purchase history, and revenue tracking for authors.
+This project is the backend implementation of a book-store application, providing features for user management, book management, purchase history, and revenue tracking for authors.
 
 ## Setup
 
@@ -23,7 +23,7 @@ A default admin user is created with the following credentials:
 - **Signup User**: `POST /v1/user/signup` - Create a new user. If `userType` is not provided, a retail user is created. Allowed user types are `admin`, `author`, and `retail`.
 - **Login User**: `POST /v1/user/login` - Authenticate user with username and password.
 - **Change Password**: `PUT /v1/user/change-password` - Change user's password.
-- **View Profile**: `GET /v1/user/profile` - View user's profile information.
+- **View Profile**: `GET /v1/user/profile` - View the user's profile information.
 - **Update Profile**: `PUT /v1/user/profile/update` - Update user's profile information.
 - **Create Admin User**: `POST /v1/user/create` - Create a new admin user. (Admin only)
 - **View All Users**: `GET /v1/user/all` - View all users. (Admin only)
@@ -34,13 +34,14 @@ A default admin user is created with the following credentials:
 
 - **Create Book**: `POST /v1/book/create` - Create a new book. (Author or Admin only)
 - **Update Book**: `PUT /v1/book/:slug` - Update a book by its title slug. (Author or Admin only)
-- **Publish Book**: `PUT /v1/book/make/publish` - Publish a book. Sends email notification to retail users. (Author or Admin only)
+- **Publish Book**: `PUT /v1/book/make/publish` - Publish a book. Sends email notifications to retail users. (Author or Admin only)
 - **Fetch All Books**: `GET /v1/book/fetch` - Fetch all books with optional pagination and filtering. (All users)
+- **Fetch By Book Title as a slug**: `GET /v1/book/fetch/:slug` - Fetch a book by its title used as a slug. (All users)
 - **Delete Book**: `DELETE /v1/book/:slug` - Delete a book by its title slug. (Admin only)
 
 ### Purchase History
 
-- **Purchase Book**: `POST /v1/purchase/book` - Purchase a book. Sends email notification to authors with revenue information.
+- **Purchase Book**: `POST /v1/purchase/book` - Purchase a book. Sends email notifications to authors with revenue information. also Uses transaction rollback
 
 ## Scheduled Tasks
 
