@@ -16,6 +16,9 @@ A default admin user is created with the following credentials:
 - Username: `magadhtech`
 - Password: `Magadh@12`
 
+## Note
+- All APIs require a token for authentication except for signup and login.
+
 ## API Endpoints
 
 ### User Management
