@@ -107,7 +107,38 @@ const fetch = async (req, res) => {
         const page = req.query.page || 1;
         const limit = req.query.limit || 10;
 
-        const fetchedData = await fetchBooks(searchKey, page, limit);
+        const fetchedData = await fetchBooks(searchKey, page, limit, false);
+        if (fetchedData) {
+            return res.status(200).json({
+                result: fetchedData,
+                success: true,
+                message: 'Book fetched successfully.',
+                error: null
+            });
+        } else {
+            return res.status(400).json({
+                result: {},
+                success: false,
+                message: 'Something went wrong while updating a Book',
+                error: null
+            });
+        }
+    } catch (error) {
+        console.error('Error creating user:', error);
+        return res.status(500).json({
+            success: false,
+            message: error.message || "Internal server error",
+            error: JSON.stringify(error)
+        });
+    }
+}
+
+// Fetch Book By title.
+const fetchBySlug = async (req, res) => {
+    try {
+        const searchKey = req.params.slug;
+
+        const fetchedData = await fetchBooks(searchKey, 1, 10, true);
         if (fetchedData) {
             return res.status(200).json({
                 result: fetchedData,
@@ -240,23 +271,6 @@ const bookPublish = async (req, res) => {
             }
 
         }
-        return false
-        if (fetchedData) {
-
-            return res.status(200).json({
-                result: fetchedData,
-                success: true,
-                message: 'Book fetched successfully.',
-                error: null
-            });
-        } else {
-            return res.status(400).json({
-                result: {},
-                success: false,
-                message: 'Something went wrong while updating a Book',
-                error: null
-            });
-        }
     } catch (error) {
         console.error('Error creating user:', error);
         return res.status(500).json({
@@ -267,4 +281,4 @@ const bookPublish = async (req, res) => {
     }
 }
 
-export { create, update, fetch, deleteBook, bookPublish }
+export { create, update, fetch, fetchBySlug, deleteBook, bookPublish }

@@ -10,7 +10,7 @@ const updateBook = async (filter, updateData) => {
     return await Book.findOneAndUpdate(filter, updateData, { new: true });
 }
 
-const fetchBooks = async (searchKey, page, size) => {
+const fetchBooks = async (searchKey, page = 1, size = 10, isSlub) => {
     page = parseInt(page);
     size = parseInt(size);
     const pipeline = [
@@ -48,15 +48,24 @@ const fetchBooks = async (searchKey, page, size) => {
             }
         }
     ];
-    if (searchKey && searchKey.trim() !== "") {
+
+    if (isSlub) {
         pipeline.push({
             $match: {
-                title: {
-                    $regex: searchKey,
-                    $options: "i"
-                }
+                title: searchKey
             }
         });
+    } else {
+        if (searchKey && searchKey.trim() !== "") {
+            pipeline.push({
+                $match: {
+                    title: {
+                        $regex: searchKey,
+                        $options: "i"
+                    }
+                }
+            });
+        }
     }
     pipeline.push(
         {

@@ -59,5 +59,9 @@ const publishValidation = [
         .notEmpty().withMessage('title parameter is required')
         .isString().withMessage('title parameter must be a string')
 ]
+const getByValidation = [
+    param('slug')
+        .notEmpty().withMessage('Title parameter is required in params')
+]
 
-export { creationValidation, updationValidation, deletionValidation, publishValidation };
+export { creationValidation, updationValidation, deletionValidation, publishValidation, getByValidation };
