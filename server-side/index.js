@@ -15,7 +15,6 @@ const { connect } = mongoose;
 app.use(json({ limit: '50mb' }));
 app.use(urlencoded({ limit: '50mb', extended: false }));
 app.use(cors());
-app.use(errorHandler);
 
 // DB connection
 connect(`mongodb://${DBHOST}:${DBPORT}/${DATABASE}`)
@@ -26,6 +25,7 @@ connect(`mongodb://${DBHOST}:${DBPORT}/${DATABASE}`)
 
 //API_routes
 app.use('/v1', routes);
+app.use(errorHandler);
 
 // server
 app.listen(PORT, () => {
