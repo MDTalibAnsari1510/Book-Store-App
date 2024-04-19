@@ -39,7 +39,7 @@ const startConsuming = () => {
                     const batch = dataGetFromQueue.retailUser.slice(i, i + batchSize);
                     const dataSent = { bookRelease: batch };
                     sendMessageToQueue(JSON.stringify(dataSent));
-                    await new Promise(resolve => setTimeout(resolve, 6000));
+                    await new Promise(resolve => setTimeout(resolve, 60000));
                 }
             } else if (dataGetFromQueue?.bookRelease) {
                 dataGetFromQueue?.bookRelease.forEach(data => {
